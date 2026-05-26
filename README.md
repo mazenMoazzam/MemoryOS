@@ -29,7 +29,7 @@ MemoryOS is a memory layer for AI agents. Right now AI assistants forget everyth
 The core of the project is a custom vector search engine written in C++. It lives in the `memory_engine/` folder.
 
 **What it does:**
-- Takes a vector (a list of floats representing a memory) and stores it in an HNSW index
+- Takes a vector (a list of floats or decimals representing a memory) and stores it in an HNSW index
 - Given a specific query vector, it searches the index and returns the top K most similar vectors by L2 distance
 - Can save and load the index to and from disk so memories persist between runs
 - Exposed to Python via pybind11 so the FastAPI backend can call it directly whenever it is needed
