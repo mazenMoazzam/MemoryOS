@@ -1,0 +1,50 @@
+# C++ build artifacts
+MemoryOS/memory_engine/build/
+*.so
+*.o
+*.a
+*.dylib
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+*.egg
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# VS Code
+.vscode/
+
+# Node / React Stuff
+node_modules/
+frontend/dist/
+frontend/build/
+
+# Database files
+*.db
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker
+docker-compose.override.yml
+
+# hnswlib index files
+*.bin
+*.idx
