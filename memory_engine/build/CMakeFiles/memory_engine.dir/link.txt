@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -bundle -Wl,-headerpad_max_install_names -Xlinker -undefined -Xlinker dynamic_lookup -flto -o memory_engine.cpython-39-darwin.so CMakeFiles/memory_engine.dir/engine.cpp.o CMakeFiles/memory_engine.dir/bindings.cpp.o
