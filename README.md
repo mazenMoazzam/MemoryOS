@@ -72,6 +72,33 @@ MemoryOS/
 
 ---
 
+### FastAPI Backend
+
+The backend is built with FastAPI and handles the full memory flow — receiving messages, embedding them, searching the C++ engine, and returning responses.
+
+It is split into three services:
+
+**services/embedding.py**
+
+Calls the OpenAI Embeddings API and converts raw text into a vector of 1536 floats. I chose text-embedding-3-small over text-embedding-ada-002 because it is cheaper, faster, and performs about the same for this use case.
+
+**services/llm.py**
+
+Calls GPT-4o with a system prompt that injects relevant past memories before the user message. I kept this in its own file so I can swap models later without touching anything else. The memory injection happens here — retrieved memories get formatted and prepended to the system prompt so the model has full context before it responds.
+
+**db/postgres.py**
+
+Handles all PostgreSQL interactions. There are two tables:
+
+- memories — stores the raw text of each memory, the vector ID that links it to the C++ engine, the session it came from, and a timestamp
+- sessions — stores session metadata per user
+
+The reason vector_id exists is because the C++ engine and PostgreSQL need to stay in sync. The C++ engine only knows numbers not text. So when the C++ engine finds the top 5 closest vectors and returns their IDs, PostgreSQL uses those IDs to look up and return the actual text of those memories.
+
+I chose to run PostgreSQL in a Docker container instead of installing it locally because it keeps the setup clean and reproducible. Anyone can clone this repo, run docker compose up -d, and have a fully working database in seconds without configuring anything manually. It also means when this eventually gets deployed, Docker is already part of the setup.
+
+---
+
 ## Setup
 
 ### Build the C++ engine
@@ -84,4 +111,16 @@ cmake ..
 make
 ```
 
-This produces `memory_engine.cpython-39-darwin.so` in the build folder which Python imports directly.
+### Start the database
+
+```bash
+docker compose up -d
+```
+
+### Run the backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
