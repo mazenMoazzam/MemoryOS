@@ -48,3 +48,4 @@ docker-compose.override.yml
 # hnswlib index files
 *.bin
 *.idx
+*.index
