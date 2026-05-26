@@ -30,9 +30,9 @@ The core of the project is a custom vector search engine written in C++. It live
 
 **What it does:**
 - Takes a vector (a list of floats representing a memory) and stores it in an HNSW index
-- Given a query vector, searches the index and returns the top K most similar vectors by L2 distance
+- Given a specific query vector, it searches the index and returns the top K most similar vectors by L2 distance
 - Can save and load the index to and from disk so memories persist between runs
-- Exposed to Python via pybind11 so the FastAPI backend can call it directly
+- Exposed to Python via pybind11 so the FastAPI backend can call it directly whenever it is needed
 
 **How the C++ code works:**
 
