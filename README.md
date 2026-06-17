@@ -74,7 +74,7 @@ MemoryOS/
 
 ### FastAPI Backend
 
-The backend is built with FastAPI and handles the full memory flow — receiving messages, embedding them, searching the C++ engine, and returning responses.
+The backend is built with FastAPI and handles the full memory flow. This includes receiving messages, embedding them, searching the C++ engine, and returning responses.
 
 It is split into three services:
 
