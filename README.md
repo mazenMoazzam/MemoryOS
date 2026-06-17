@@ -84,7 +84,7 @@ Calls the OpenAI Embeddings API and converts raw text into a vector of 1536 floa
 
 **services/llm.py**
 
-Calls GPT-4o with a system prompt that injects relevant past memories before the user message. I kept this in its own file so I can swap models later without touching anything else. The memory injection happens here — retrieved memories get formatted and prepended to the system prompt so the model has full context before it responds.
+Calls GPT-4o with a system prompt that injects relevant past memories before the user message. I kept this in its own file so I can swap models later without touching anything else. The memory injection happens here where retrieved memories get formatted and prepended to the system prompt so the model has full context before it responds.
 
 **db/postgres.py**
 
