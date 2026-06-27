@@ -22,6 +22,7 @@ async def setup_db():
                 session_id TEXT,
                 raw_text TEXT NOT NULL,
                 vector_id INTEGER NOT NULL,
+                source TEXT NOT NULL DEFAULT 'chat',
                 created_at TIMESTAMPTZ DEFAULT NOW()
             )
         """)
@@ -33,16 +34,16 @@ async def setup_db():
             )
         """)
 
-async def insert_memory(raw_text: str, vector_id: int, session_id: str = None, user_id: str = "default") -> int:
+async def insert_memory(raw_text: str, vector_id: int, session_id: str = None, user_id: str = "default", source: str = "chat") -> int:
     pool = await get_pool()
     async with pool.acquire() as conn:
         row = await conn.fetchrow(
             """
-            INSERT INTO memories (user_id, session_id, raw_text, vector_id)
-            VALUES ($1, $2, $3, $4)
+            INSERT INTO memories (user_id, session_id, raw_text, vector_id, source)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING id
             """,
-            user_id, session_id, raw_text, vector_id
+            user_id, session_id, raw_text, vector_id, source
         )
         return row["id"]
 

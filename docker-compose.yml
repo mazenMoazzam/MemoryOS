@@ -11,5 +11,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  vector_service:
+    build:
+      context: .
+      dockerfile: vector_service/Dockerfile
+    container_name: memoryos_vector
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./vector_service/memory.index:/app/memory.index
+    restart: unless-stopped
+
 volumes:
   postgres_data:

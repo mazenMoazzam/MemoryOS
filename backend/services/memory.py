@@ -1,33 +1,22 @@
-import sys
 import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../memory_engine/build'))
-
-from memory_engine import MemoryEngine
+import httpx
 from services.embedding import embed_text
 from db.postgres import insert_memory, fetch_memories_by_ids, get_next_vector_id
 
-VECTOR_DIM = 1536
-MAX_ELEMENTS = 10000
-INDEX_PATH = os.path.join(os.path.dirname(__file__), '../memory.index')
+VECTOR_SERVICE_URL = os.getenv("VECTOR_SERVICE_URL", "http://localhost:8001")
 
-_engine = None
-
-def get_engine() -> MemoryEngine:
-    global _engine
-    if _engine is None:
-        _engine = MemoryEngine(dim=VECTOR_DIM, max_elements=MAX_ELEMENTS)
-        if os.path.exists(INDEX_PATH):
-            _engine.load_index(INDEX_PATH)
-    return _engine
 
 async def store_memory(text: str, session_id: str = None, user_id: str = "default") -> int:
     vector = await embed_text(text)
     vector_id = await get_next_vector_id()
 
-    engine = get_engine()
-    engine.add_vector(vector_id, vector)
-    engine.save_index(INDEX_PATH)
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"{VECTOR_SERVICE_URL}/add",
+            json={"vector_id": vector_id, "embedding": vector},
+            timeout=10.0
+        )
+        resp.raise_for_status()
 
     row_id = await insert_memory(
         raw_text=text,
@@ -38,13 +27,20 @@ async def store_memory(text: str, session_id: str = None, user_id: str = "defaul
 
     return row_id
 
+
 async def retrieve_memories(query: str, top_k: int = 5) -> list[str]:
     vector = await embed_text(query)
 
-    engine = get_engine()
-    results = engine.search(vector, top_k)
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"{VECTOR_SERVICE_URL}/search",
+            json={"embedding": vector, "top_k": top_k},
+            timeout=10.0
+        )
+        resp.raise_for_status()
 
-    vector_ids = [r.id for r in results]
+    data = resp.json()
+    vector_ids = [r["id"] for r in data["results"]]
     texts = await fetch_memories_by_ids(vector_ids)
 
     return texts

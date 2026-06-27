@@ -4,3 +4,4 @@ openai
 asyncpg
 python-dotenv
 pydantic
+httpx
