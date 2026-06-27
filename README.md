@@ -2,7 +2,7 @@
 
 ## What is this?
 
-MemoryOS is a memory layer for AI agents. Right now AI assistants forget everything between conversations. MemoryOS fixes that by storing what the user says, embedding it into vectors, and retrieving relevant past context whenever the user asks something new. The goal is to make AI agents feel like they actually remember you and your work across numerous sessions
+Project represents a memory layer for AI agents. Right now AI assistants forget everything between conversations. MemoryOS fixes that by storing what the user says, embedding it into vectors, and retrieving relevant past context whenever the user asks something new. The goal is to make AI agents feel like they actually remember you and your work across numerous sessions
 
 ## What is being built
 
